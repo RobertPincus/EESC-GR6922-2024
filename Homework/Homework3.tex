@@ -1,0 +1,80 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx,times,natbib,url,setspace,color,wrapfig,pdfpages,xcolor}
+\usepackage[version=3]{mhchem}
+\usepackage{siunitx}
+
+%\usepackage[english]{babel}
+\usepackage{amsmath,amssymb,mathabx}
+\usepackage{parskip}
+% Margins
+\setlength{\topmargin}{-0.55in}
+\setlength{\oddsidemargin}{-0.1in}
+\setlength{\textwidth}{6.8in}
+\setlength{\textheight}{9.0in}
+
+%%%%%%%%%%%%%%%%%
+\title{EESC GR6922: Atmospheric Radiation, Fall 2024 \\  Homework 3, due October 24}
+% \author{Robert Pincus} 
+% \date{\today}
+
+%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\maketitle
+%%%%%%%%%%%%%%%%%
+These problems are  ambitious and open-ended. My hope is that you'll get a lot out of them. Especially on this assignment you should feel free to collaborate with one another; I ask that you understand any code you use and that your figures and write-ups be your own. As no equations need to be manipulated please type this homework up and turn in a PDF. 
+
+Problems 2 and 3 require the use of a line-by-line model called ARTS (the ``Atmospheric Radiative Transfer Simulator'',  \url{https://RadiativeTransfer.org}). ARTS is accessed via Python; instructions for installing the Python package are on the front page of the web site. ARTS relies on compiled code and may not run on Windows; use Google Colab or Binder (or come talk to me for help getting on a Linux host). 
+
+We will make use of instructional materials developed using ARTS available at \url{https://github.com/atmtools/arts-lectures/tree/develop} (be sure to use the {\tt develop} branch!).
+
+As always, please surround your figures and calculations with discussion. 
+
+\section{Creating idealized profiles}
+
+Write a small bit of Python to create idealized profiles of temperature, pressure, and water vapor mixing ratio on a discrete grid given a surface temperature. One possible idealization is a troposphere with constant relative humidity following a moist adiabat extending from a surface temperature to $T = 220 \si{\kelvin}$, with an isothermal stratosphere above this (e.g. Koll et. al. 2023, ``An Analytic Model for the Clear-Sky Longwave Feedback'', \url{https://doi.org/10.1175/JAS-D-22-0178.1}). You can make another idealization but should explain your reasoning. Python packages like NCAR's {\tt metpy} may be useful in constructing these profiles. 
+
+\begin{itemize}
+\item On a single panel plot temperature and water vapor mixing as a function of pressure for several values of surface temperature. It'll look more like a sounding if you put pressure (or its logarithm) on the $y$-axis. 
+\item On a single panel plot the integrated water vapor path as a function of (air) temperature for several values of surface temperature. It might be more intuitive to have air temperature on the $y$-axis, increasing downwards as it would in the atmosphere. 
+\end{itemize}
+
+\section{Line shapes and atmospheric opacity}
+
+We've learned how pressure and temperature broadening affect individual absorption lines. This problem illustrates how broadening affects the column-integrated opacity of (simplified) atmospheres. It makes use of modules in the {\tt exercises/01-molecule\_spectra/} directory of the ARTS lectures (be sure to use the {\tt develop} branch!). The existing exercises are done in frequency; I would like figures etc. plotted as a function of wavenumber (which of course means converting from frequency to wavenumber increments). 
+
+\begin{enumerate}
+
+\item Use {\tt calculate\_absxsec()}  to compute the spectrally-resolved absorption cross-section (\si{\square\meter} per molecule) for carbon dioxide under near-surface and stratospheric conditions. Focus on no more than a few hundred wavenumbers around the $\nu_2$ vibration-absorption feature at 667.5 \si{\per\centi\meter}. What does spectral variation imply about the resolution needed for line-by-line calculations at low pressures vs. high pressures? 
+
+\item Use {\tt calculate\_absxsec()}  to compute the spectrally-resolved absorption cross-section  for water vapor under near-surface and stratospheric conditions. It may be most interesting to focus on one spectral region dominated by rotational bands (say around 500  \si{\per\centi\meter}), another in the water vapor window (800-1200 \si{\per\centi\meter}), and a third in a spectral region dominated by vibration-rotation lines (say 1300  \si{\per\centi\meter}). 
+
+\item Compute the vertically-integrated optical depth due to water vapor and carbon dioxide in your idealized atmosphere. Vertical variations in temperature and pressure will change the spectral absorption via  line  broadening, and you'll need to convert from cross-sections to total extinction by computing the total number of molecules in each layer. Make plots of both the spectrally-resolved optical depth (a log scale will be helpful) and the transmissivity for a surface temperature representative of the tropics and another of the high latitudes. You may find it useful to double-check against \url{http://eodg.atm.ox.ac.uk/ATLAS/zenith-absorption}. 
+
+\end{enumerate}
+%%%%%%%%%%%%%%%%%
+\section{Outgoing longwave radiation is linear in temperature}
+
+This problem is inspired by DDB Koll and TW Cronin 2018,``Earth’s outgoing longwave radiation linear due to \ce{H2O} greenhouse effect'', \url{https://doi.org/10.1073/pnas.1809868115}. Define the longwave (clear-sky) feedback as the change in outgoing longwave radiation with a change in surface temperature 
+\begin{equation}
+\lambda_{LW} = \frac{d F^+}{d T_{s}}\bigg|_{TOA} = \frac{d \textrm{OLR}}{d T_{s}}
+\end{equation}
+where $T_s$ is the surface temperature. 
+
+If the range between surface temperature and the (spectrally-resolved) brightness temperature  is not enormous, or if temperature variations are roughly constant with height, we might  imagine that 
+\begin{equation}
+\label{eq:sb-feedback}
+\lambda_{LW} \approx  \frac{d  \sigma T_s^4}{d T_{s}} = 4 \sigma T_s^3
+\end{equation}
+In other words, we might expect that $\lambda_{LW}$ depends fairly strongly on $T_s$
+
+Directory {\tt exercises/06-olr} of the ARTS lectures (be sure to use the {\tt develop} branch!) shows how to compute OLR.. The existing exercises are done in frequency; I would like figures etc. plotted as a function of wavenumber (which of course means converting from frequency to wavenumber increments). 
+
+\begin{enumerate}
+\item Use {\tt  calc\_olr\_from\_profiles} to compute $\lambda_{LW}$ using your idealized atmospheric profiles at several surface temperatures. Total OLR can be computed by integrating the spectrally-resolved OLR, say with {\tt numpy.trapz()}. (As one point of reference the surface temperature of the US Standard Midlatitude summer atmosphere is 294.2 \si{\kelvin}.) Feedback estimates for each surface temperature will require two separate LBL calculations. Compare the values to  (\ref{eq:sb-feedback}); justify your choice for the temperature at which you evaluate the equation. 
+\item Plot the spectrally-resolved feedbacks $\lambda_{\nu}$ for each pair of temperatures. Why do large regions of the spectrum have such small feedbacks? Which spectral regions have large feedbacks, and why?  
+\item How and why might feedbacks change at very high surface temperatures in this framework? 
+\end{enumerate} 
+
+\end{document}
