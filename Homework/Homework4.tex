@@ -1,0 +1,50 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx,times,natbib,url,setspace,color,wrapfig,pdfpages,xcolor}
+\usepackage[version=3]{mhchem}
+\usepackage{siunitx}
+
+%\usepackage[english]{babel}
+\usepackage{amsmath,amssymb,mathabx}
+\usepackage{parskip}
+% Margins
+\setlength{\topmargin}{-0.55in}
+\setlength{\oddsidemargin}{-0.1in}
+\setlength{\textwidth}{6.8in}
+\setlength{\textheight}{9.0in}
+
+%%%%%%%%%%%%%%%%%
+\title{EESC GR6922: Atmospheric Radiation, Fall 2024 \\ Homework 4, due Dec 18}
+\author{Robert Pincus} 
+\date{\today}
+
+%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\maketitle
+
+%%%%%%%%%%%%%%%%%
+\section{Single scattering by spheres}
+
+This problem relies on the ability to do Mie calculations of single-scattering properties -- extinction, scattering, and absorption efficiencies and  scattering phase functions -- for spheres. Scott Prahl's {\tt miepython} package looks pretty great. It can be installed via {\tt pip} or download from Github ({\tt https://github.com/scottprahl/miepython}). The Github page links to thorough documentation including examples. A table of the complex index of refraction of water is bundled with the code ({\tt data/segelstein81\_index.txt}). Syl is having good luck with  {\tt https://pymiesim.readthedocs.io/en/latest/}. 
+
+\begin{enumerate}
+
+\item Plot the extinction and absorption cross-sections for a drop of pure water with radius $r$ 10 \si{\micro\meter} across the solar spectrum (0.2 - 4 \si{\micro\meter}). It may be interesting to show the size parameter $x = \frac{2 \pi r}{\lambda}$ in addition to the wavelength. Make a second plot showing extinction and absorption efficiencies. Make a second set of plots for the water vapor window(8-12 \si{\micro\meter}), where the atmosphere is transparent enough that clouds can impact the surface and top-of-atmosphere radiation fields. Remember that the complex index of refraction varies with wavelength. 
+
+\item Plot the scattering phase function for a drop with radius $r = 10~\si{\micro\meter}$ at  wavelength $\lambda = .5  \si{\micro\meter}$. Show the delta-scaled phase function on the same plot. You may but need not assume that $f = g^2$, and you'll need to make a choice of the angular width over which to replace the phase function with a delta function. Explain your choices. 
+
+\item Plot the extinction and absorption cross-sections and efficiences for droplets ranging from 4 - 20 \si{\micro\meter} for wavelength $\lambda = .5  \si{\micro\meter}$. Do the same for a Gamma distribution of cloud drops with $r_e$ varying over the same range. You can set effective variance $\nu_e \equiv 1/{\alpha+3} = 0.1.$ How and why do the curves differ? 
+
+\end{enumerate}
+%%%%%%%%%%%%%%%%%
+\section{Two-stream solutions}
+
+Using the solutions to the two-stream equations we developed in class
+\begin{enumerate}
+\item Plot the reflectance, transmittance, and absorptance of a single layer as a function of total optical depth $\tau^*$ and single scattering albedo. Let experience guide the range of values over which you show the values. 
+\item Use Mie calculations to compute the single-scattering albedo and phase functions for Gamma distributions at $r_e = [2, 4, 8, 12, 16, 24]  \si{\micro\meter}$ at wavelengths $\lambda_{\textrm{vis}} = .65  \si{\micro\meter}$ and $\lambda_{\textrm{nir}} = 2.16  \si{\micro\meter}$. Plot the reflectance at $\lambda_{\textrm{nir}}$ as a function of the reflectance at $\lambda_{\textrm{vis}}$ for $\tau^* = 4, 6, 8, 12, 16, 24, 32$. Connect lines of constant $\tau^*$ with lines; connect lines of constant $r_e$ with lines of another type/color. Explain how measurements at these two wavelengths might be used to estimate $\tau^*$ and $r_e$. In what parameter range would it be possible to estimate one of these quantities from a single measurement, rather than both quantities from the two measurements? 
+\end{enumerate}
+
+
+\end{document}
